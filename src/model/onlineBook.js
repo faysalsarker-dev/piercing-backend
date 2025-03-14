@@ -15,13 +15,12 @@ const onlineBookSchema = new mongoose.Schema({
         required: true
     },
     bookingDate: {
-        type: Date,
+        type: String,
         required: true
     },
     slot: {
         type: String,
         required: true,
-        unique: true
     },
 },
 {

@@ -1,12 +1,20 @@
 const OnlineBook = require('../model/onlineBook');
+const  sendMail  = require('../middlewares/sendMail');
+const mailTemplate = require('../utility/mailTemplate');
 
 const createBooking = async (req, res) => {
     try {
+        console.log(req.body,'req.body');
         const booking = new OnlineBook(req.body);
         await booking.save();
         res.status(201).send(booking);
+        await sendMail(req.body.email, 'Booking Confirmation', mailTemplate(req.body.name, req.body.bookingDate, req.body.slot));
+           
     } catch (error) {
         res.status(400).send(error);
+        console.log(error
+
+        );
     }
 };
 
@@ -18,6 +26,20 @@ const getAllBookings = async (req, res) => {
         res.status(500).send(error);
     }
 };
+
+
+
+const getSlots = async (req, res) => {
+    try {
+        const { date } = req.params; 
+        const bookings = await OnlineBook.find({ bookingDate: date }).select("bookingDate slot -_id");
+        res.status(200).json(bookings);
+    } catch (error) {
+        res.status(500).json({ error: "Server error while fetching slots." });
+    }
+};
+
+
 
 const getBookingById = async (req, res) => {
     try {
@@ -60,5 +82,6 @@ module.exports = {
     getAllBookings,
     getBookingById,
     updateBookingById,
-    deleteBookingById
+    deleteBookingById,
+    getSlots
 };

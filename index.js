@@ -19,6 +19,7 @@ app.use(cors());
 
 
 app.use('/online-booking',BookingRoutes);
+
 app.use('/post',PostRoutes)
 
 
