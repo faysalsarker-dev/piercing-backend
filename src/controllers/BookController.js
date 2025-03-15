@@ -4,7 +4,6 @@ const mailTemplate = require('../utility/mailTemplate');
 
 const createBooking = async (req, res) => {
     try {
-        console.log(req.body,'req.body');
         const booking = new OnlineBook(req.body);
         await booking.save();
         res.status(201).send(booking);
@@ -38,6 +37,22 @@ const getSlots = async (req, res) => {
         res.status(500).json({ error: "Server error while fetching slots." });
     }
 };
+
+
+
+
+
+const getTodaysBookings = async (req, res) => {
+    try {
+        const { date } = req.params; 
+        const bookings = await OnlineBook.find({ bookingDate: date }).sort({slot: 1});
+        res.status(200).json(bookings);
+        console.log(bookings);
+    } catch (error) {
+        res.status(500).json({ error: "Server error while fetching slots." });
+    }
+};
+
 
 
 
@@ -83,5 +98,6 @@ module.exports = {
     getBookingById,
     updateBookingById,
     deleteBookingById,
-    getSlots
+    getSlots,
+    getTodaysBookings
 };

@@ -25,6 +25,7 @@ app.use('/post',PostRoutes)
 
 
 
+app.use("/images", express.static(path.resolve(__dirname, "./src/images")));
 
 
 app.use(errorHandler);

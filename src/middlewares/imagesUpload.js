@@ -4,7 +4,7 @@ const fs = require('fs');
 const { promisify } = require('util');
 
 
-const uploadDir = path.resolve(__dirname, '../images');
+const uploadDir = path.resolve(__dirname, './../images');
 
 
 const ensureDirExists = promisify(fs.mkdir);
@@ -20,7 +20,7 @@ const storage = multer.diskStorage({
     const fileName = `${uniqueSuffix}-${file.originalname}`;
     const fullFilePath = path.join(uploadDir, fileName);
     
-   
+   console.log(fullFilePath,'file ');
 
     cb(null, fileName); 
   },

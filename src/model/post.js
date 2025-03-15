@@ -15,19 +15,24 @@ const postSchema = new mongoose.Schema({
     },
     btn1Text: {
         type: String,
-        required: false
+        required: false,
+        default: null
     },
     btn1Link: {
         type: String,
-        required: false
+        required: false,
+        default: null
     },
     btn2Text: {
         type: String,
         required: false
+        ,
+        default: null
     },
     btn2Link: {
         type: String,
-        required: false
+        required: false,
+        default: null
     }
 });
 

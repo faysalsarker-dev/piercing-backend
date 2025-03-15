@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAllBookings, getBookingById,getSlots, createBooking, updateBookingById, deleteBookingById } = require('../controllers/BookController');
+const { getAllBookings, getBookingById,getSlots,getTodaysBookings, createBooking, updateBookingById, deleteBookingById } = require('../controllers/BookController');
 
 const router = express.Router();
 
@@ -9,6 +9,7 @@ const router = express.Router();
 router.get('/', getAllBookings);
 router.get('/:id', getBookingById);
 router.get('/check-slots/:date', getSlots);
+router.get('/todays-book/:date', getTodaysBookings);
 router.post('/', createBooking);
 router.put('/:id', updateBookingById);
 router.delete('/:id', deleteBookingById);
