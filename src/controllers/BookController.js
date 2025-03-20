@@ -1,6 +1,27 @@
 const OnlineBook = require('../model/onlineBook');
 const  sendMail  = require('../middlewares/sendMail');
 const mailTemplate = require('../utility/mailTemplate');
+const cron = require('node-cron');
+const adminMail = require('../utility/adminMail');
+
+
+
+
+cron.schedule('0 0 * * *', async () => {  
+    const twoDaysAgo = new Date();
+    twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);  
+  
+    await Booking.deleteMany({ bookingDate: { $lt: twoDaysAgo } });
+  
+    console.log('Bookings older than 2 days deleted successfully.');
+  });
+
+
+
+
+
+
+
 
 const createBooking = async (req, res) => {
     try {
@@ -8,7 +29,7 @@ const createBooking = async (req, res) => {
         await booking.save();
         res.status(201).send(booking);
         await sendMail(req.body.email, 'Booking Confirmation', mailTemplate(req.body.name, req.body.bookingDate, req.body.slot));
-           
+        await sendMail(process.env.EMAIL_AUTHOR,'New Booking Received',adminMail(req.body.name,req.body.phone,req.body.slot,req.body.email,req.body.bookingDate))
     } catch (error) {
         res.status(400).send(error);
         console.log(error
@@ -19,12 +40,23 @@ const createBooking = async (req, res) => {
 
 const getAllBookings = async (req, res) => {
     try {
-        const bookings = await OnlineBook.find();
-        res.status(200).send(bookings);
+        const { dateQuery, date } = req.query;
+
+        let filter = {};
+
+        if (dateQuery === 'today') {
+            filter = { bookingDate: { $gte: date } }; 
+        } else if (dateQuery === 'yesterday') {
+            filter = { bookingDate: { $lt: date } }; 
+        }
+
+        const bookings = await OnlineBook.find(filter);
+        res.status(200).json(bookings);
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).json({ message: "Server error", error });
     }
 };
+
 
 
 

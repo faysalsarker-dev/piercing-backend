@@ -10,6 +10,14 @@ const onlineBookSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    servicesName: {
+        type: String,
+        required: true
+    },
+    price: {
+        type: String,
+        required: true
+    },
     phone: {
         type: String,
         required: true

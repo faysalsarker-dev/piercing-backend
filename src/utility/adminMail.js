@@ -1,10 +1,10 @@
-const emailTemplate = (name,date,time) => {
+const adminMail = (name,phone,slot,email,bookingDate) => {
     return `<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booking Confirmation</title>
+    <title>New Booking Notification</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -84,32 +84,34 @@ const emailTemplate = (name,date,time) => {
 
         <!-- Main Content -->
         <div class="content">
-            <h2>Booking Confirmation</h2>
-            <p>Dear <strong>${name}</strong>,</p>
-            <p>We are pleased to confirm your booking with us.</p>
+            <h2>New Booking Received</h2>
+            <p>Dear Admin,</p>
+            <p>A new booking has been made. Please review the details below:</p>
 
             <!-- Booking Details -->
             <div class="details">
-                <p><strong>Booking Date:</strong> ${date}</p>
-                <p><strong>Time:</strong> ${time}</p>
-             
+                <p><strong>Client Name:</strong> ${name}</p>
+                <p><strong>Email:</strong> ${email}</p>
+                <p><strong>Phone:</strong> ${phone}</p>
+                <p><strong>Booking Date:</strong> ${bookingDate}</p>
+                <p><strong>Time:</strong> ${slot}</p>
+              
             </div>
 
-            <p>We look forward to seeing you! If you have any questions, feel free to contact us.</p>
-
-
+           
         </div>
 
         <!-- Footer -->
         <div class="footer">
-            &copy; 2025 - All right reserved by Piercing Södermalm
+            &copy; 2025  Piercing Södermalm | Admin Notification
         </div>
     </div>
 
 </body>
 </html>
 
+
 `
-};
+}
   
-module.exports =  emailTemplate ;
+module.exports =  adminMail ;
