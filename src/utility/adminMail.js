@@ -1,114 +1,103 @@
-const adminMail = (name,phone,slot,email,bookingDate) => {
-    return `<!DOCTYPE html>
-<html>
+const adminMail = (name,phone,slot,email,bookingDate,servicesName,price) => {
+    return `
+    <!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Booking Notification</title>
+    <title>New Booking Received - Piercing Södermalm</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #eef5ff;
+            background-color: #f4f4f4;
             margin: 0;
             padding: 0;
+            color: #333;
         }
-        .email-container {
+        .container {
+            width: 100%;
             max-width: 600px;
-            margin: 20px auto;
-            background: #ffffff;
-            border-radius: 10px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0px 4px 15px rgba(0, 123, 255, 0.2);
-            border: 1px solid #007bff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
         .header {
-            background-color: #007bff;
+            background-color: #222;
             padding: 20px;
             text-align: center;
         }
         .header img {
-            max-width: 160px;
+            max-width: 150px;
+        }
+        .header h1 {
+            color: #ffffff;
+            margin: 10px 0 0;
+            font-size: 24px;
         }
         .content {
-            padding: 25px;
-            color: #333;
-            text-align: center;
+            padding: 20px;
         }
         .content h2 {
-            color: #0056b3;
-            margin-bottom: 15px;
+            color: #222;
+            font-size: 20px;
+            margin-bottom: 10px;
         }
         .details {
-            background: #f0f8ff;
-            padding: 18px;
-            border-radius: 8px;
-            margin: 20px;
-            text-align: left;
-            border-left: 5px solid #007bff;
+            margin: 20px 0;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
         }
         .details p {
-            margin: 8px 0;
+            margin: 5px 0;
             font-size: 16px;
-            color: #0056b3;
         }
         .footer {
-            background: #007bff;
-            color: #fff;
+            background-color: #222;
+            color: #ffffff;
             text-align: center;
             padding: 15px;
             font-size: 14px;
         }
-        .button {
-            background-color: #0056b3;
-            color: white;
-            padding: 12px 24px;
+        .footer a {
+            color: #ffffff;
             text-decoration: none;
-            border-radius: 6px;
-            display: inline-block;
-            margin-top: 15px;
-            font-size: 16px;
-            font-weight: bold;
         }
-        .button:hover {
-            background-color: #004494;
+        .footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-
-    <div class="email-container">
-        <!-- Header with Logo -->
+    <div class="container">
         <div class="header">
-            <img src="https://piercing-sodermalm.web.app/assets/logo-CwXzsCy3.png" alt="Company Logo">
+            <img src="cid:logo123" alt="Piercing Södermalm Logo">
+            <h1>New Booking Received</h1>
         </div>
-
-        <!-- Main Content -->
         <div class="content">
-            <h2>New Booking Received</h2>
-            <p>Dear Admin,</p>
-            <p>A new booking has been made. Please review the details below:</p>
-
-            <!-- Booking Details -->
+            <h2>Booking Details:</h2>
             <div class="details">
-                <p><strong>Client Name:</strong> ${name}</p>
-                <p><strong>Email:</strong> ${email}</p>
+                <p><strong>Name:</strong> ${name}</p>
                 <p><strong>Phone:</strong> ${phone}</p>
+                <p><strong>Email:</strong> ${email}</p>
                 <p><strong>Booking Date:</strong> ${bookingDate}</p>
-                <p><strong>Time:</strong> ${slot}</p>
-              
+                <p><strong>Service:</strong> ${servicesName}</p>
+                <p><strong>Time Slot:</strong> ${slot}</p>
+                <p><strong>Price:</strong> ${price}</p>
             </div>
-
-           
+            <p>Thank you for your attention. Please follow up with the customer if needed.</p>
         </div>
-
-        <!-- Footer -->
         <div class="footer">
-            &copy; 2025  Piercing Södermalm | Admin Notification
+            <p>&copy; 2025 Piercing Södermalm. All rights reserved.</p>
+            <p>Åsögatan 128, 11624 Stockholm, Sweden | 08-6415057 | <a href="mailto:piercingsodermalm@gmail.com">piercingsodermalm@gmail.com</a></p>
         </div>
     </div>
-
 </body>
 </html>
+
 
 
 `

@@ -18,6 +18,13 @@ const sendMail = (email, subject, html) => {
       to: email,
       subject: subject,
       html: html,
+      attachments: [
+        {
+            filename: 'logo.png', 
+            path: __dirname + '/logo.png', 
+            cid: 'logo123' 
+        }
+    ]
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
