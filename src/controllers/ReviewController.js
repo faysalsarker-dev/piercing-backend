@@ -1,8 +1,16 @@
 const Review = require('../model/Review'); // Assuming you have a Review model
 const path = require('path');
 const fs = require('fs');
+
+
+
+
+
+
+
 const getAllReviews = async (req, res) => {
     try {
+
         const reviews = await Review.find();
         res.status(200).json(reviews);
     } catch (error) {

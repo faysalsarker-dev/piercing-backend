@@ -5,15 +5,31 @@ const PriceList = require('../model/PriceList');
 
 
 
+
+
+
 const getAllPrices = async (req, res) => {
     try {
-  
+
         const priceLists = await PriceList.find();
         res.status(200).json(priceLists);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Create a new item inside a category
 const createPrice = async (req, res) => {

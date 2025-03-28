@@ -1,11 +1,11 @@
-const adminMail = (name,phone,slot,email,bookingDate,servicesName,price) => {
+const adminMail = (name, phone, slot, email, bookingDate, servicesName, price) => {
     return `
     <!DOCTYPE html>
-<html lang="en">
+<html lang="sv">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Booking Received - Piercing Södermalm</title>
+    <title>Ny Bokning Mottagen - Piercing Södermalm</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -75,32 +75,29 @@ const adminMail = (name,phone,slot,email,bookingDate,servicesName,price) => {
     <div class="container">
         <div class="header">
             <img src="cid:logo123" alt="Piercing Södermalm Logo">
-            <h1>New Booking Received</h1>
+            <h1>Ny Bokning Mottagen</h1>
         </div>
         <div class="content">
-            <h2>Booking Details:</h2>
+            <h2>Bokningsdetaljer:</h2>
             <div class="details">
-                <p><strong>Name:</strong> ${name}</p>
-                <p><strong>Phone:</strong> ${phone}</p>
-                <p><strong>Email:</strong> ${email}</p>
-                <p><strong>Booking Date:</strong> ${bookingDate}</p>
-                <p><strong>Service:</strong> ${servicesName}</p>
-                <p><strong>Time Slot:</strong> ${slot}</p>
-                <p><strong>Price:</strong> ${price}</p>
+                <p><strong>Namn:</strong> ${name}</p>
+                <p><strong>Telefon:</strong> ${phone}</p>
+                <p><strong>E-post:</strong> ${email}</p>
+                <p><strong>Bokningsdatum:</strong> ${bookingDate}</p>
+                <p><strong>Tjänst:</strong> ${servicesName}</p>
+                <p><strong>Tid:</strong> ${slot}</p>
+                <p><strong>Pris:</strong> ${price}</p>
             </div>
-            <p>Thank you for your attention. Please follow up with the customer if needed.</p>
+            <p>Tack för din uppmärksamhet. Vänligen följ upp med kunden vid behov.</p>
         </div>
         <div class="footer">
-            <p>&copy; 2025 Piercing Södermalm. All rights reserved.</p>
-            <p>Åsögatan 128, 11624 Stockholm, Sweden | 08-6415057 | <a href="mailto:piercingsodermalm@gmail.com">piercingsodermalm@gmail.com</a></p>
+            <p>&copy; 2025 Piercing Södermalm. Alla rättigheter förbehållna.</p>
+            <p>Åsögatan 128, 11624 Stockholm, Sverige | 08-6415057 | <a href="mailto:piercingsodermalm@gmail.com">piercingsodermalm@gmail.com</a></p>
         </div>
     </div>
 </body>
 </html>
-
-
-
 `
 }
-  
-module.exports =  adminMail ;
+
+module.exports = adminMail;

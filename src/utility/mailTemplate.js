@@ -1,19 +1,11 @@
-
-
-
-const emailTemplate = (name,date,slot,price,servicesName) => {
-
-
-
-
+const emailTemplate = (name, date, slot, price, servicesName) => {
     return `
-    
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sv">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booking Confirmation - Piercing Södermalm</title>
+    <title>Bokningsbekräftelse - Piercing Södermalm</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -83,29 +75,27 @@ const emailTemplate = (name,date,slot,price,servicesName) => {
     <div class="container">
         <div class="header">
             <img src="cid:logo123" alt="Piercing Södermalm Logo">
-            <h1>Booking Confirmation</h1>
+            <h1>Bokningsbekräftelse</h1>
         </div>
         <div class="content">
-            <h2>Hello, ${name}!</h2>
-            <p>Thank you for choosing Piercing Södermalm. We're excited to confirm your booking:</p>
+            <h2>Hej, ${name}!</h2>
+            <p>Tack för att du har valt Piercing Södermalm. Vi är glada att kunna bekräfta din bokning:</p>
             <div class="details">
-                <p><strong>Service:</strong> ${servicesName}</p>
-                <p><strong>Date:</strong> ${date}</p>
-                <p><strong>Time:</strong> ${slot}</p>
-                <p><strong>Cost:</strong> ${price}</p>
+                <p><strong>Tjänst:</strong> ${servicesName}</p>
+                <p><strong>Datum:</strong> ${date}</p>
+                <p><strong>Tid:</strong> ${slot}</p>
+                <p><strong>Kostnad:</strong> ${price}</p>
             </div>
-            <p>If you have any questions , please contact us at piercingsodermalm@gmail.com. We look forward to providing you with an exceptional experience!</p>
+            <p>Om du har några frågor, vänligen kontakta oss på piercingsodermalm@gmail.com. Vi ser fram emot att ge dig en fantastisk upplevelse!</p>
         </div>
         <div class="footer">
-            <p>&copy; 2025 Piercing Södermalm. All rights reserved.</p>
-            <p>Åsögatan 128, 11624 Stockholm, Sweden | 08-6415057 | <a href="mailto:piercingsodermalm@gmail.com">piercingsodermalm@gmail.com</a></p>
+            <p>&copy; 2025 Piercing Södermalm. Alla rättigheter förbehållna.</p>
+            <p>Åsögatan 128, 11624 Stockholm, Sverige | 08-6415057 | <a href="mailto:piercingsodermalm@gmail.com">piercingsodermalm@gmail.com</a></p>
         </div>
     </div>
 </body>
 </html>
-
-
 `
 };
-  
-module.exports =  emailTemplate ;
+
+module.exports = emailTemplate;

@@ -3,32 +3,36 @@ const mongoose = require('mongoose');
 const onlineBookSchema = new mongoose.Schema({
     email: {
         type: String,
-        required: true,
+        required: false,
    
     },
     name: {
         type: String,
-        required: true
+        required: false
     },
     servicesName: {
         type: String,
-        required: true
+        required: false
     },
     price: {
         type: String,
-        required: true
+        required: false
     },
     phone: {
         type: String,
-        required: true
+        required: false
     },
     bookingDate: {
         type: String,
-        required: true
+        required: false
     },
     slot: {
         type: String,
-        required: true,
+        required: false,
+    },
+    status: {
+        type: String,
+        default: "confirmed"
     },
 },
 {
