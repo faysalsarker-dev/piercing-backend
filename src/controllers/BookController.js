@@ -9,7 +9,7 @@ const userCancelMail = require('../utility/userCancelMail');
 
 
 const { subDays, format, startOfDay } = require("date-fns");
-const { addToAdminCalendar, deleteEventFromCalendar } = require('./GoogleCelender');
+// const { addToAdminCalendar, deleteEventFromCalendar } = require('./GoogleCelender');
 const DateOverride = require('../model/Override');
 const WeeklySchedule = require('../model/Schedule');
 
