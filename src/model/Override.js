@@ -10,6 +10,10 @@
   isDayOff: {
     type: Boolean,
     default: false
+  },
+  message: {
+    type: String,
+    default: "It's an off day. Please choose another date."
   }
 });
 const DateOverride = mongoose.model('DateOverride', dateOverrideSchema);

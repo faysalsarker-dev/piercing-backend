@@ -12,6 +12,10 @@ const weeklyScheduleSchema = new mongoose.Schema({
   isDayOff: {
     type: Boolean,
     default: false
+  },
+  message: {
+    type: String,
+    default: "It's an off day. Please choose another date."
   }
 });
 weeklyScheduleSchema.index({ day: 1 });

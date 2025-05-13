@@ -8,6 +8,8 @@ const PriceRoutes = require("./src/routers/PriceRoutes");
 const weeklyScheduleRoutes = require("./src/routers/weeklyScheduleRoutes");
 const OverRideController = require("./src/routers/OverRideController");
 const OnlineBook = require('./src/model/onlineBook');
+const blogRoutes = require('./src/routers/blogRoutes');
+
 require("dotenv").config();
 const path = require("path");
 const sendMail = require("./src/middlewares/sendMail");
@@ -32,7 +34,7 @@ app.use('/online-booking',BookingRoutes);
 
 app.use('/price',PriceRoutes)
 
-
+app.use('/blogs', blogRoutes);
 
 app.use('/review',ReviewRoutes)
 

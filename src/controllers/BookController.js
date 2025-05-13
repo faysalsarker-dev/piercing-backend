@@ -42,51 +42,31 @@ cron.schedule('0 0 * * *', async () => {
   const createBooking = async (req, res) => {
     try {
      
-
-        const formattedDate = format(new Date(req.body.bookingDate), 'EEEE, MMMM d, yyyy');
-    
-
-     
-        
-
-        const eventDate = req?.body?.bookingDate;
-        const eventTime = req?.body?.slot;
-        const [hour, minute] = eventTime.split(':');
-        const newHour = String(parseInt(hour) - 1).padStart(2, '0');
-        const updatedTime = `${newHour}:${minute}`;
-        const eventTitle = req?.body?.servicesName;
-        const eventDescription = `New Booking for ${req?.body?.servicesName} at ${req?.body?.bookingDate} ${req?.body?.slot}`;
-
-
-
-
-      const eventId  = await  addToAdminCalendar(eventDate, updatedTime, eventTitle, eventDescription);
-
-const booking = new OnlineBook({ ...req.body , eventId});
+const booking = new OnlineBook({ ...req.body });
 await booking.save();
 
 
 res.status(201).json({ message: "Booking created successfully", booking });
 
-if(req.body.email !== 'N/A'){
+// if(req.body.email !== 'N/A'){
 
-    Promise.all([
-        sendMail(
-            req?.body?.email, 
-            'Booking Confirmation', 
-            mailTemplate(req.body.name, formattedDate, req.body.slot, req.body.price, req.body.servicesName)
-        ),
+//     Promise.all([
+//         sendMail(
+//             req?.body?.email, 
+//             'Booking Confirmation', 
+//             mailTemplate(req.body.name, formattedDate, req.body.slot, req.body.price, req.body.servicesName)
+//         ),
      
       
-        sendMail(
-            process.env.EMAIL_AUTHOR, 
-            'New Booking Received', 
-            adminMail(req.body.name, req.body.phone, req.body.slot, req.body.email,formattedDate, req.body.servicesName,req.body.price)
-        )
-    ]).catch(err => console.error("Email sending error:", err)); // Catch email errors
+//         sendMail(
+//             process.env.EMAIL_AUTHOR, 
+//             'New Booking Received', 
+//             adminMail(req.body.name, req.body.phone, req.body.slot, req.body.email,formattedDate, req.body.servicesName,req.body.price)
+//         )
+//     ]).catch(err => console.error("Email sending error:", err)); // Catch email errors
 
 
-}
+// }
 
 
     } catch (error) {
@@ -121,28 +101,13 @@ const getAllBookings = async (req, res) => {
 
 
 
-// const getSlots = async (req, res) => {
-//     try {
-//         const { date } = req.params; 
-//         const bookings = await OnlineBook.find({
-//             bookingDate: date,
-//             status: 'confirmed',
-//           }).select("bookingDate slot status -_id");
-//         res.status(200).json(bookings);
-//     } catch (error) {
-//         res.status(500).json({ error: "Server error while fetching slots." });
-//     }
-// };
-
-
 
 
 
 
 
 const getSlots = async (req, res) =>  {
-  const { date } = req.query;
-
+  const { date } = req.params;
   if (!date) {
     return res.status(400).json({ error: 'Date is required' });
   }
@@ -162,14 +127,14 @@ const getSlots = async (req, res) =>  {
 
     if (override) {
       if (override.isDayOff) {
-        return res.json([]); 
+        return res.json({ message: override?.message ,isDayOff: true,slot:[] }); 
       }
       slots = override.slots || [];
     } else {
       // Step 2: Fallback to weekly schedule
       const weekly = await WeeklySchedule.findOne({ day: dayName });
       if (!weekly || weekly.isDayOff) {
-        return res.json([]); // Day off by weekly rule
+        return res.json({ message: weekly?.message ,isDayOff: true,slot:[] }); 
       }
       slots = weekly.slots || [];
     }
@@ -179,7 +144,7 @@ const getSlots = async (req, res) =>  {
     const bookedSlots = bookings.map(b => b.slot);
 
     const availableSlots = slots.filter(slot => !bookedSlots.includes(slot));
-    return res.json(availableSlots);
+    return res.json({slots:availableSlots, isDayOff: false});
 
   } catch (err) {
     console.error('Error fetching available slots:', err);

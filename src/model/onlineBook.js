@@ -18,7 +18,7 @@ const onlineBookSchema = new mongoose.Schema(
       required: true,
       trim: true
     },
-    servicesName: {
+    service: {
       type: String,
       required: true,
       trim: true
@@ -28,16 +28,16 @@ const onlineBookSchema = new mongoose.Schema(
       required: true
     },
     bookingDate: {
-      type: String, // Format: "YYYY-MM-DD"
+      type: String, 
       required: true
     },
     slot: {
-      type: String, // Format: "10:00 AM - 11:00 AM"
+      type: String, 
       required: true
     },
     status: {
       type: String,
-      enum: ['confirmed', 'pending', 'cancelled'],
+      enum: ['confirmed', 'cancelled'],
       default: 'confirmed'
     }
   },
