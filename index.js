@@ -3,9 +3,10 @@ const cors = require("cors");
 const connectDB = require("./src/config/db");
 const errorHandler = require("./src/middlewares/errorHandler");
 const BookingRoutes = require("./src/routers/BookingRoutes");
-const PostRoutes = require("./src/routers/PostRoutes");
 const ReviewRoutes = require("./src/routers/ReviewRoutes");
 const PriceRoutes = require("./src/routers/PriceRoutes");
+const weeklyScheduleRoutes = require("./src/routers/weeklyScheduleRoutes");
+const OverRideController = require("./src/routers/OverRideController");
 const OnlineBook = require('./src/model/onlineBook');
 require("dotenv").config();
 const path = require("path");
@@ -26,7 +27,6 @@ app.use(cors());
 app.use('/online-booking',BookingRoutes);
 
 
-app.use('/post',PostRoutes)
 
 
 
@@ -35,6 +35,19 @@ app.use('/price',PriceRoutes)
 
 
 app.use('/review',ReviewRoutes)
+
+
+app.use('/weekly-schedules',weeklyScheduleRoutes );
+
+
+
+app.use('/override-schedules',OverRideController );
+
+
+
+
+
+
 
 app.get('/my-bookings', async (req, res) => {
      try {

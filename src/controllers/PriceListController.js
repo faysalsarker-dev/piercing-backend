@@ -20,12 +20,47 @@ const getAllPrices = async (req, res) => {
 
 
 
+const createCategory = async (req, res) => {
+    try {
+      const { category } = req.body;
+  
+      const newCategory = new PriceList({
+        category: category,
+        items: [], 
+      });
+  
+      const savedCategory = await newCategory.save();
+      
+      res.status(201).json({
+        message: 'Category created successfully',
+        data: savedCategory
+      });
+      
+    } catch (error) {
+      console.error('Error creating category:', error);
+      res.status(500).json({ message: 'Server error', error: error.message });
+    }
+  };
+  
 
 
+  const deleteCategory = async (req, res) => {
+    try {
+      const { id } = req.params;
 
-
-
-
+      const deletedCategory = await PriceList.findByIdAndDelete(id);
+  
+      if (!deletedCategory) {
+        return res.status(404).json({ message: 'Category not found' });
+      }
+  
+      res.status(200).json({ message: 'Category deleted successfully', data: deletedCategory });
+    } catch (error) {
+      console.error('Error deleting category:', error);
+      res.status(500).json({ message: 'Server error', error: error.message });
+    }
+  };
+  
 
 
 
@@ -34,7 +69,7 @@ const getAllPrices = async (req, res) => {
 // Create a new item inside a category
 const createPrice = async (req, res) => {
     try {
-        const { category, name, price } = req.body;
+        const { category, name, price ,link} = req.body;
 
         // Check if the category exists
         let categoryData = await PriceList.findOne({ category });
@@ -43,7 +78,7 @@ const createPrice = async (req, res) => {
         }
 
         // Add new item
-        const newItem = { name, price };
+        const newItem = { name, price , link };
         categoryData.items.push(newItem);
         await categoryData.save();
 
@@ -56,7 +91,7 @@ const createPrice = async (req, res) => {
 // Update an existing item in a category
 const updatePrice = async (req, res) => {
     try {
-        const { category, name, price } = req.body;
+        const { category, name, price ,link} = req.body;
         const { id } = req.params;
 
         let categoryData = await PriceList.findOne({ category });
@@ -71,6 +106,7 @@ const updatePrice = async (req, res) => {
 
         item.name = name;
         item.price = price;
+        item.link = link;
 
         await categoryData.save();
         res.status(200).json({ message: "Item updated successfully", categoryData });
@@ -104,5 +140,7 @@ module.exports = {
     getAllPrices,
     createPrice,
     updatePrice,
-    deletePrice
+    deletePrice,
+    createCategory,
+    deleteCategory
 };
