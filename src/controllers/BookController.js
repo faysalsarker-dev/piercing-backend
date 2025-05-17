@@ -12,6 +12,7 @@ const { subDays, format, startOfDay } = require("date-fns");
 // const { addToAdminCalendar, deleteEventFromCalendar } = require('./GoogleCelender');
 const DateOverride = require('../model/Override');
 const WeeklySchedule = require('../model/Schedule');
+const { saveSlotSummary } = require('./SummariesController');
 
 cron.schedule('0 0 * * *', async () => {  
     try {
@@ -45,7 +46,7 @@ cron.schedule('0 0 * * *', async () => {
 const booking = new OnlineBook({ ...req.body });
 await booking.save();
 
-
+await saveSlotSummary(booking);
 res.status(201).json({ message: "Booking created successfully", booking });
 
 // if(req.body.email !== 'N/A'){
