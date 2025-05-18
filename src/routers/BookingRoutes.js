@@ -1,12 +1,12 @@
 const express = require('express');
-const { getAllBookings, getBookingById,myBookings,getSlots,getTodaysBookings, createBooking, updateBookingById, deleteBookingById } = require('../controllers/BookController');
+const { getAllOnlineBookings, getBookingById,myBookings,getSlots,getTodaysBookings, createBooking, updateBookingById, deleteBookingById } = require('../controllers/BookController');
 
 const router = express.Router();
 
 // Controller functions (you need to implement these)
 
 // Routes
-router.get('/', getAllBookings);
+router.get('/', getAllOnlineBookings);
 router.get('/:id', getBookingById);
 router.get('/check-slots/:date', getSlots);
 router.get('/todays-book/:date', getTodaysBookings);

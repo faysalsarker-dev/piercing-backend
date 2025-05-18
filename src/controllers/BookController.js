@@ -77,28 +77,56 @@ res.status(201).json({ message: "Booking created successfully", booking });
 };
 
 
-const getAllBookings = async (req, res) => {
-    try {
-        const { dateQuery } = req.query;
+const getAllOnlineBookings = async (req, res) => {
+  try {
+    const {
+      page = 1,
+      limit = 10,
+      search = '',
+      status,
+      service,
+      bookingDate,
+      sortBy = 'createdAt',
+      sortOrder = 'desc',
+    } = req.query;
 
-        const formattedDate = format(new Date(), 'yyyy-MM-dd');
+    const searchRegex = new RegExp(search, 'i');
+    const searchFilter = {
+      $or: [
+        { name: { $regex: searchRegex } },
+        { phone: { $regex: searchRegex } },
+        { email: { $regex: searchRegex } },
+      ],
+    };
 
-        let filter = {};
+    const filter = { ...searchFilter };
 
-        if (dateQuery === 'today') {
-            filter = { bookingDate: { $gte: formattedDate } }; 
-        } else if (dateQuery === 'yesterday') {
-            filter = { bookingDate: { $lt: formattedDate } }; 
-        }
+    if (status) filter.status = status;
+    if (service) filter.service = service;
+    if (bookingDate) filter.bookingDate = bookingDate;
 
-        const bookings = await OnlineBook.find(filter);
-        res.status(200).json(bookings);
-       
-        } catch (error) {
-        res.status(500).json({ message: "Server error", error });
-    }
+    const sortOptions = {};
+    sortOptions[sortBy] = sortOrder === 'asc' ? 1 : -1;
+
+    // 📄 Pagination
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    const total = await OnlineBook.countDocuments(filter);
+    const bookings = await OnlineBook.find(filter)
+      .sort(sortOptions)
+      .skip(skip)
+      .limit(parseInt(limit));
+
+    res.status(200).json({
+      total,
+      page: parseInt(page),
+      limit: parseInt(limit),
+      bookings,
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
 };
-
 
 
 
@@ -278,7 +306,7 @@ const myBookings = async (req, res) => {
 
 module.exports = {
     createBooking,
-    getAllBookings,
+    getAllOnlineBookings,
     getBookingById,
     updateBookingById,
     deleteBookingById,
