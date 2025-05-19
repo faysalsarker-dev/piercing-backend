@@ -86,10 +86,14 @@ const getAllOnlineBookings = async (req, res) => {
       status,
       service,
       bookingDate,
+      from,
+      to,
       sortBy = 'createdAt',
       sortOrder = 'desc',
     } = req.query;
 
+
+    // 🔍 Search filter
     const searchRegex = new RegExp(search, 'i');
     const searchFilter = {
       $or: [
@@ -99,12 +103,20 @@ const getAllOnlineBookings = async (req, res) => {
       ],
     };
 
+    // 🧠 Build filter
     const filter = { ...searchFilter };
 
     if (status) filter.status = status;
     if (service) filter.service = service;
     if (bookingDate) filter.bookingDate = bookingDate;
 
+    if (from || to) {
+      filter.bookingDate = {};
+      if (from) filter.bookingDate.$gte = from;
+      if (to) filter.bookingDate.$lte = to;
+    }
+
+    // 🧾 Sorting
     const sortOptions = {};
     sortOptions[sortBy] = sortOrder === 'asc' ? 1 : -1;
 

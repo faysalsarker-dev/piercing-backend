@@ -8,6 +8,7 @@ const PriceRoutes = require("./src/routers/PriceRoutes");
 const weeklyScheduleRoutes = require("./src/routers/weeklyScheduleRoutes");
 const OverRideController = require("./src/routers/OverRideController");
 const userRoutes = require("./src/routers/userRoutes");
+const galleryRoutes = require('./src/routers/galleryRoutes');
 
 const Summaries = require("./src/routers/Summaries");
 const OnlineBook = require('./src/model/onlineBook');
@@ -53,6 +54,7 @@ app.use('/override-schedules',OverRideController );
 
 
 
+app.use('/gallery', galleryRoutes);
 
 
 
