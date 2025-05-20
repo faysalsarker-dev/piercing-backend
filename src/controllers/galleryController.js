@@ -7,23 +7,27 @@ const uploadPath = path.resolve(__dirname, '../images');
 // Create
 const createGalleryItem = async (req, res) => {
   try {
-    const { type, status = 'active', serial } = req.body;
+    const { type, status = 'active', serial, url } = req.body;
 
-    if (!req.file) return res.status(400).json({ error: 'File is required.' });
+    if (type !== "link" && !req.file) {
+      return res.status(400).json({ error: 'File is required for non-link types.' });
+    }
 
     const newItem = new GalleryItem({
       type,
       status,
       serial,
-      url: `/images/${req.file.filename}`
+      url: type === "link" ? url : `/${req.file.filename}`,
     });
 
     await newItem.save();
     res.status(201).json(newItem);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
 };
+
 
 // Read all
 const getAllGalleryItems = async (req, res) => {

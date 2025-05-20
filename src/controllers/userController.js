@@ -1,9 +1,11 @@
 const admin = require("../config/firebaseAdmin");
 const User = require("../model/User");
 
+
+
 exports.createUser = async (req, res) => {
   const { email, password, displayName, role } = req.body;
-
+console.log(email);
   try {
     const userRecord = await admin.auth().createUser({
       email,
@@ -22,6 +24,7 @@ exports.createUser = async (req, res) => {
     res.status(201).json(newUser);
 
   } catch (error) {
+    console.log(error.message);
     res.status(400).json({ error: error.message });
   }
 };

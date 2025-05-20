@@ -1,146 +1,99 @@
+// controllers/priceListController.js
 const PriceList = require('../model/PriceList');
+const fs = require('fs');
+const path = require('path');
 
-// Get all price lists
+// CREATE
+exports.createPrice = async (req, res) => {
+  try {
+    const { title, discountedPrice, regularPrice, description, category } = req.body;
 
+    const image = req.file ? req.file.filename : null;
 
+    const newPriceItem = await PriceList.create({
+      title,
+      discountedPrice,
+      regularPrice,
+      description,
+      category,
+      image,
+    });
 
-
-
-
-
-const getAllPrices = async (req, res) => {
-    try {
-
-        const priceLists = await PriceList.find();
-        res.status(200).json(priceLists);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
+    res.status(201).json(newPriceItem);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
+// GET ALL
+exports.getAllPrices = async (req, res) => {
+  try {
+    const items = await PriceList.find().sort({ createdAt: -1 });
+    res.json(items);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
+// GET SINGLE
+exports.getPriceById = async (req, res) => {
+  try {
+    const item = await PriceList.findById(req.params.id);
+    if (!item) return res.status(404).json({ error: 'Item not found' });
+    res.json(item);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
-const createCategory = async (req, res) => {
-    try {
-      const { category } = req.body;
-  
-      const newCategory = new PriceList({
-        category: category,
-        items: [], 
-      });
-  
-      const savedCategory = await newCategory.save();
-      
-      res.status(201).json({
-        message: 'Category created successfully',
-        data: savedCategory
-      });
-      
-    } catch (error) {
-      console.error('Error creating category:', error);
-      res.status(500).json({ message: 'Server error', error: error.message });
-    }
-  };
-  
+// UPDATE
+exports.updatePrice = async (req, res) => {
+  try {
+    const { title, discountedPrice, regularPrice, description, category } = req.body;
 
+    const item = await PriceList.findById(req.params.id);
+    if (!item) return res.status(404).json({ error: 'Item not found' });
 
-  const deleteCategory = async (req, res) => {
-    try {
-      const { id } = req.params;
-
-      const deletedCategory = await PriceList.findByIdAndDelete(id);
-  
-      if (!deletedCategory) {
-        return res.status(404).json({ message: 'Category not found' });
+    // If new image uploaded, delete old one
+    if (req.file) {
+      if (item.image) {
+        const oldImagePath = path.join(__dirname, `../uploads/prices/${item.image}`);
+        if (fs.existsSync(oldImagePath)) {
+          fs.unlinkSync(oldImagePath);
+        }
       }
-  
-      res.status(200).json({ message: 'Category deleted successfully', data: deletedCategory });
-    } catch (error) {
-      console.error('Error deleting category:', error);
-      res.status(500).json({ message: 'Server error', error: error.message });
+      item.image = req.file.filename;
     }
-  };
-  
 
+    item.title = title || item.title;
+    item.discountedPrice = discountedPrice || item.discountedPrice;
+    item.regularPrice = regularPrice || item.regularPrice;
+    item.description = description || item.description;
+    item.category = category || item.category;
 
-
-
-
-// Create a new item inside a category
-const createPrice = async (req, res) => {
-    try {
-        const { category, name, price ,link} = req.body;
-
-        // Check if the category exists
-        let categoryData = await PriceList.findOne({ category });
-        if (!categoryData) {
-            return res.status(400).json({ message: "Invalid category" });
-        }
-
-        // Add new item
-        const newItem = { name, price , link };
-        categoryData.items.push(newItem);
-        await categoryData.save();
-
-        res.status(201).json({ message: "Item added successfully", categoryData });
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
+    await item.save();
+    res.json(item);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
-// Update an existing item in a category
-const updatePrice = async (req, res) => {
-    try {
-        const { category, name, price ,link} = req.body;
-        const { id } = req.params;
+// DELETE
+exports.deletePrice = async (req, res) => {
+  try {
+    const item = await PriceList.findByIdAndDelete(req.params.id);
+    if (!item) return res.status(404).json({ error: 'Item not found' });
 
-        let categoryData = await PriceList.findOne({ category });
-        if (!categoryData) {
-            return res.status(404).json({ message: "Category not found" });
-        }
-
-        const item = categoryData.items.id(id);
-        if (!item) {
-            return res.status(404).json({ message: "Item not found" });
-        }
-
-        item.name = name;
-        item.price = price;
-        item.link = link;
-
-        await categoryData.save();
-        res.status(200).json({ message: "Item updated successfully", categoryData });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+    // Delete image file if it exists
+    if (item.image) {
+      const imagePath = path.join(__dirname, `./../images${item.image}`);
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
     }
-};
 
-// Delete an item from a category
-const deletePrice = async (req, res) => {
-    try {
-        // const { category } = req.body;
-        const  id = req.params.id;
-        const category = req.params.category;
-
-        let categoryData = await PriceList.findOne({ category });
-        if (!categoryData) {
-            return res.status(404).json({ message: "Category not found" });
-        }
-
-        categoryData.items = categoryData.items.filter(item => item._id.toString() !== id);
-        await categoryData.save();
-
-        res.status(200).json({ message: "Item deleted successfully" });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-
-module.exports = {
-    getAllPrices,
-    createPrice,
-    updatePrice,
-    deletePrice,
-    createCategory,
-    deleteCategory
+    res.json({ message: 'Item deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };

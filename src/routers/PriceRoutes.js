@@ -1,26 +1,24 @@
 const express = require('express');
-const PriceListController = require('../controllers/PriceListController');
-
 const router = express.Router();
-
-// Route to get all prices
-router.get('/', PriceListController.getAllPrices);
-
-// Route to get a price by ID
+const priceListController = require('../controllers/PriceListController');
+const { upload } = require('../middlewares/imagesUpload');
 
 
-// Route to create a new price
-router.post('/', PriceListController.createPrice);
-
-router.post('/category', PriceListController.createCategory);
 
 
-// Route to update a price by ID
-router.put('/:id', PriceListController.updatePrice);
+// CREATE
+router.post('/', upload.single('image'), priceListController.createPrice);
 
-// Route to delete a price by ID
-router.delete('/:id/:category', PriceListController.deletePrice);
+// GET ALL
+router.get('/', priceListController.getAllPrices);
 
-router.delete('/:id', PriceListController.deleteCategory);
+// GET SINGLE
+router.get('/:id', priceListController.getPriceById);
+
+// UPDATE
+router.put('/:id', upload.single('image'), priceListController.updatePrice);
+
+// DELETE
+router.delete('/:id', priceListController.deletePrice);
 
 module.exports = router;

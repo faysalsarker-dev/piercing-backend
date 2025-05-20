@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const galleryItemSchema = new mongoose.Schema({
   type: {
     type: String,
-    enum: ['image', 'video'],
+    enum: ['image', 'video','link'],
     required: true,
   },
   url: {
