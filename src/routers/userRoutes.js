@@ -6,6 +6,8 @@ router.post("/", userController.createUser);
 
 router.get("/", userController.getAllUsers);
 
+router.get("/:email", userController.checkUserRole);
+
 router.get("/:uid", userController.getUserByUID);
 
 router.put("/:uid", userController.updateUser);

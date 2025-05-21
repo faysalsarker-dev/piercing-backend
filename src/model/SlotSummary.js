@@ -2,17 +2,17 @@ const mongoose = require('mongoose');
 
 const slotSummarySchema = new mongoose.Schema({
   date: {
-    type: String, // Format: YYYY-MM-DD
+    type: String, 
     required: true,
     unique: true
   },
   slots: [
     {
-      time: String, 
-      user: {
-        name: String,
-        email: String,
-        phone: String
+      time: String,
+      clientDetails: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'OnlineBook',
+        required: true
       }
     }
   ]

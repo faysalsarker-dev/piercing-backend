@@ -5,7 +5,6 @@ const User = require("../model/User");
 
 exports.createUser = async (req, res) => {
   const { email, password, displayName, role } = req.body;
-console.log(email);
   try {
     const userRecord = await admin.auth().createUser({
       email,
@@ -49,6 +48,25 @@ exports.getUserByUID = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
+exports.checkUserRole = async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.params.email });
+    if (!user) return res.status(404).json({ error: "User not found" });
+    res.json({ role: user.role });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+
+
+
+
+
+
 
 
 exports.updateUser = async (req, res) => {

@@ -13,6 +13,7 @@ const { subDays, format, startOfDay } = require("date-fns");
 const DateOverride = require('../model/Override');
 const WeeklySchedule = require('../model/Schedule');
 const { saveSlotSummary } = require('./SummariesController');
+const { createOrUpdateMonthlyReport, updateReportOnStatusChange } = require('../utility/reports/report');
 
 cron.schedule('0 0 * * *', async () => {  
     try {
@@ -48,26 +49,10 @@ await booking.save();
 
 await saveSlotSummary(booking);
 res.status(201).json({ message: "Booking created successfully", booking });
-
-// if(req.body.email !== 'N/A'){
-
-//     Promise.all([
-//         sendMail(
-//             req?.body?.email, 
-//             'Booking Confirmation', 
-//             mailTemplate(req.body.name, formattedDate, req.body.slot, req.body.price, req.body.servicesName)
-//         ),
-     
-      
-//         sendMail(
-//             process.env.EMAIL_AUTHOR, 
-//             'New Booking Received', 
-//             adminMail(req.body.name, req.body.phone, req.body.slot, req.body.email,formattedDate, req.body.servicesName,req.body.price)
-//         )
-//     ]).catch(err => console.error("Email sending error:", err)); // Catch email errors
+await createOrUpdateMonthlyReport(booking)
 
 
-// }
+
 
 
     } catch (error) {
@@ -246,9 +231,11 @@ const updateBookingById = async (req, res) => {
             return res.status(404).json({ message: "Booking not found" });
         }
 
-        if (req.body.status === "cancelled") {
-            const formattedDate = format(new Date(booking.bookingDate), 'EEEE, MMMM d, yyyy');
-            deleteEventFromCalendar(booking?.eventId)
+        if (req.body.status === "cancelled" && booking.status === "confirmed") {
+           
+
+await updateReportOnStatusChange(booking,req.body.status)
+
             if (booking.email !== 'N/A') {
                 if (auth === 'user') {
                     await sendMail(
