@@ -56,9 +56,52 @@ const deleteReport = async (req, res) => {
   }
 };
 
+
+
+
+
+
+
+const getMonthlyDashboardSummary = async (req, res) => {
+  try {
+    const reports = await MonthlyReport.find()
+      .sort({ month: 1 }) 
+      .lean();
+
+    if (!reports.length) return res.json({ totalBookings: 0, trend: [], topServices: [] });
+
+    const latest = reports[reports.length - 1];
+
+    const trend = reports.map((r) => ({
+      month: r.month,
+      totalBookings: r.totalBookings,
+      confirmedBookings: r.confirmedBookings,
+      cancelledBookings: r.cancelledBookings,
+    }));
+
+    const summary = {
+      totalBookings: latest.totalBookings,
+      confirmedBookings: latest.confirmedBookings,
+      cancelledBookings: latest.cancelledBookings,
+      totalRevenue: latest.totalRevenue,
+      trend,
+      topServices: latest.topServices.slice(0, 5),
+    };
+
+    res.json(summary);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Dashboard fetch failed' });
+  }
+};
+
+
+
+
 module.exports = {
   getAllReports,
   getReportByMonth,
   updateReport,
   deleteReport,
+  getMonthlyDashboardSummary
 };
