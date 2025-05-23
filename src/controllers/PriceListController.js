@@ -6,8 +6,7 @@ const path = require('path');
 // CREATE
 exports.createPrice = async (req, res) => {
   try {
-    const { title, discountedPrice, regularPrice, description, category } = req.body;
-
+    const { title, discountedPrice, regularPrice, description, category ,web} = req.body;
     const image = req.file ? req.file.filename : null;
 
     const newPriceItem = await PriceList.create({
@@ -17,6 +16,7 @@ exports.createPrice = async (req, res) => {
       description,
       category,
       image,
+      web
     });
 
     res.status(201).json(newPriceItem);
@@ -29,6 +29,21 @@ exports.createPrice = async (req, res) => {
 exports.getAllPrices = async (req, res) => {
   try {
     const items = await PriceList.find().sort({ createdAt: -1 });
+    res.json(items);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+exports.getAllPricesForWeb = async (req, res) => {
+  try {
+const {web,category} = req.params
+
+    const items = await PriceList.find({
+  web: { $in: ['both', web] },
+  category,
+}).sort({ createdAt: -1 });
     res.json(items);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -86,7 +101,7 @@ exports.deletePrice = async (req, res) => {
 
     // Delete image file if it exists
     if (item.image) {
-      const imagePath = path.join(__dirname, `./../images${item.image}`);
+      const imagePath = path.join(__dirname, `../images${item.image}`);
       if (fs.existsSync(imagePath)) {
         fs.unlinkSync(imagePath);
       }

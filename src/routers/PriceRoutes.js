@@ -12,6 +12,8 @@ router.post('/', upload.single('image'), priceListController.createPrice);
 // GET ALL
 router.get('/', priceListController.getAllPrices);
 
+router.get('/:web/:category', priceListController.getAllPricesForWeb);
+
 // GET SINGLE
 router.get('/:id', priceListController.getPriceById);
 

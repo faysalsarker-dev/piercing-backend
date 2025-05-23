@@ -13,6 +13,7 @@ const galleryRoutes = require('./src/routers/galleryRoutes');
 const Summaries = require("./src/routers/Summaries");
 const OnlineBook = require('./src/model/onlineBook');
 const blogRoutes = require('./src/routers/blogRoutes');
+const offerBannerRoutes = require('./src/routers/offerBannerRoutes');
 
 require("dotenv").config();
 const path = require("path");
@@ -52,7 +53,7 @@ app.use('/summaries',Summaries);
 app.use('/override-schedules',OverRideController );
 
 
-
+app.use('/banners', offerBannerRoutes);
 
 app.use('/gallery', galleryRoutes);
 
