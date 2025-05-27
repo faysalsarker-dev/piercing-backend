@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
 const offerBannerSchema = new mongoose.Schema({
   title: {
@@ -6,10 +7,8 @@ const offerBannerSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  content: {
-    type: String,
-    required: true,
-  },
+content: { type: Schema.Types.Mixed ,required: true},
+
   imageUrl: {
     type: String,
     required: true,

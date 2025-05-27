@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
+const { upload } = require('../middlewares/imagesUpload');
 
 // Import the controller functions
 const { createBlog, getAllBlogs, getBlogBySlug, updateBlog, deleteBlog } = require('../controllers/blogController');
 
 // Create a new blog
-router.post('/', createBlog);
+router.post('/',upload.single('image') , createBlog);
 
 // Get all blogs
 router.get('/', getAllBlogs);
@@ -14,7 +15,7 @@ router.get('/', getAllBlogs);
 router.get('/:slug', getBlogBySlug);
 
 // Update a blog by its slug
-router.put('/:slug', updateBlog);
+router.put('/:slug',upload.single('image'), updateBlog);
 
 // Delete a blog by its slug
 router.delete('/:slug', deleteBlog);

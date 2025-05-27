@@ -1,13 +1,18 @@
 const Blog = require('../model/Blog');
+const fs = require('fs');
+const path = require('path');
+
+const uploadPath = path.resolve(__dirname, '../images/');
 
 // Create Blog
 const createBlog = async (req, res) => {
   try {
-    const { title, slug, image, content, seo } = req.body;
+    const { title, slug, content, seo } = req.body;
+    const image = req.file ? req.file.filename : undefined;
 
     const newBlog = new Blog({
       title,
-      slug, // You can pass an empty slug, it'll get generated in the model
+      slug,
       image,
       content,
       seo
@@ -22,13 +27,43 @@ const createBlog = async (req, res) => {
 
 // Get All Blogs
 const getAllBlogs = async (req, res) => {
+  const { web } = req.query;
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+
+  const skip = (page - 1) * limit;
+
   try {
-    const blogs = await Blog.find().sort({ createdAt: -1 });
-    res.json(blogs);
+    let filter = {};
+
+    if (web) {
+      filter = {
+        $or: [
+          { web: web },
+          { web: 'both' },
+        ],
+      };
+    }
+
+    const blogs = await Blog.find(filter)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    const totalBlogs = await Blog.countDocuments(filter);
+    const totalPages = Math.ceil(totalBlogs / limit);
+
+    res.json({
+      currentPage: page,
+      totalPages,
+      totalBlogs,
+      blogs,
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
+
 
 // Get Blog by Slug
 const getBlogBySlug = async (req, res) => {
@@ -44,21 +79,39 @@ const getBlogBySlug = async (req, res) => {
 // Update Blog
 const updateBlog = async (req, res) => {
   try {
-    const { title, slug, image, content, seo } = req.body;
+    const { title, slug, content, seo } = req.body;
 
     const blog = await Blog.findOne({ slug: req.params.slug });
     if (!blog) return res.status(404).json({ message: 'Blog not found' });
 
+    // Handle image update
+    if (req.file) {
+      // Delete old image if exists
+      if (blog.image) {
+        const oldImagePath = path.join(uploadPath, path.basename(blog.image));
+        fs.access(oldImagePath, fs.constants.F_OK, (err) => {
+          if (!err) {
+            fs.unlink(oldImagePath, (unlinkErr) => {
+              if (unlinkErr) {
+                console.error('Error deleting old image:', unlinkErr);
+              }
+            });
+          }
+        });
+      }
+      blog.image = req.file.filename;
+    }
+
+    // Update other fields
     blog.title = title || blog.title;
-    blog.slug = slug || blog.slug; // You can pass a custom slug
-    blog.image = image || blog.image;
+    blog.slug = slug || blog.slug;
     blog.content = content || blog.content;
     blog.seo = {
       ...blog.seo,
       ...seo,
       title: seo?.title || title || blog.title,
       ogTitle: seo?.ogTitle || title || blog.title,
-      ogImage: seo?.ogImage || image || blog.image,
+      ogImage: seo?.ogImage || blog.image,
       ogUrl: seo?.ogUrl || slug || blog.slug,
     };
 
@@ -74,6 +127,22 @@ const deleteBlog = async (req, res) => {
   try {
     const blog = await Blog.findOneAndDelete({ slug: req.params.slug });
     if (!blog) return res.status(404).json({ message: 'Blog not found' });
+
+    // Delete image file if it exists
+    if (blog.image) {
+      const filePath = path.join(uploadPath, path.basename(blog.image));
+      console.log(filePath);
+      fs.access(filePath, fs.constants.F_OK, (err) => {
+        if (!err) {
+          fs.unlink(filePath, (unlinkErr) => {
+            if (unlinkErr) {
+              console.error('Error deleting image:', unlinkErr);
+            }
+          });
+        }
+      });
+    }
+
     res.json({ message: 'Blog deleted successfully' });
   } catch (err) {
     res.status(500).json({ message: err.message });

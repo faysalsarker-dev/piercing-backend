@@ -8,11 +8,12 @@ const {
   updateBanner,
   deleteBanner,
 } = require('../controllers/offerBannerController');
+const { upload } = require('../middlewares/imagesUpload');
 
-router.post('/', createBanner);
+router.post('/',upload.single('image'), createBanner);
 router.get('/', getBanners);
 router.get('/:id', getBannerById);
-router.put('/:id', updateBanner);
+router.put('/:id',upload.single('image'), updateBanner);
 router.delete('/:id', deleteBanner);
 
 module.exports = router;
